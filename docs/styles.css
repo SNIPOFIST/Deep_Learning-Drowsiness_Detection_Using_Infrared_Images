@@ -37,10 +37,20 @@ header {
   background: linear-gradient(180deg, #15202b 0%, var(--bg) 100%);
 }
 
-header h1 {
-  margin: 0 0 0.5rem;
-  font-size: 1.75rem;
+.site-title {
+  margin: 0 0 0.35rem;
+  font-size: 1.85rem;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  color: #ff8c42;
+  text-shadow: 0 0 28px rgba(255, 140, 66, 0.35);
+}
+
+.page-heading {
+  margin: 0 0 0.75rem;
+  font-size: 1.35rem;
   font-weight: 600;
+  color: var(--text);
 }
 
 header p {
