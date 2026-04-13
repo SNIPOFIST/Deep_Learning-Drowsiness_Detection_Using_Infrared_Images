@@ -1,0 +1,49 @@
+# ===== Data / datasets (do NOT push large image sets or downloads) =====
+data/
+Data/
+Datasets/
+datasets/
+dataset/
+
+# Trained weights (keep models/Models .gitkeep; ignore binaries)
+models/*.keras
+Models/*.keras
+models/*.h5
+models/*.pb
+
+# Runtime outputs (videos, crops; created by scripts)
+outputs/
+
+# Legacy paths (if present locally)
+Cropped_eyes/
+cropped_eyes/
+output_data/
+
+# Common dataset archives
+*.zip
+*.tar
+*.tar.gz
+*.tgz
+
+# dlib landmark model (place in assets/)
+assets/shape_predictor*.dat
+assets/shape_predictor*.bz2
+shape_predictor*.dat
+shape_predictor*.bz2
+
+# ===== Python =====
+__pycache__/
+*.pyc
+*.pyo
+.Python
+
+# ===== Notebooks =====
+.ipynb_checkpoints/
+
+# ===== Virtual envs =====
+.venv/
+venv/
+
+# ===== OS =====
+.DS_Store
+Thumbs.db
