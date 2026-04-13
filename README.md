@@ -2,6 +2,11 @@
 
 **Repository:** [github.com/SNIPOFIST/Deep_Learning-Drowsiness_Detection_Using_Infrared_Images](https://github.com/SNIPOFIST/Deep_Learning-Drowsiness_Detection_Using_Infrared_Images)
 
+**Model zoo (metrics + download links):** after enabling Pages (see **GitHub Pages** below), the site will be  
+[https://snipofist.github.io/Deep_Learning-Drowsiness_Detection_Using_Infrared_Images/](https://snipofist.github.io/Deep_Learning-Drowsiness_Detection_Using_Infrared_Images/)
+
+**Saved weights:** Keras checkpoints live in [`weights/`](weights/) (copy into `models/` for local inference, or change `DEFAULT_MODEL_PATH` in `src/drowsiness/config.py`).
+
 **Per-frame binary classifier** that predicts **awake vs. sleepy** from **grayscale infrared eye crops**, trained on the **MRL Eye Dataset**, with optional **offline video** and **webcam** demos that combine **dlib** face landmarks with the trained **Keras** model.
 
 ---
@@ -89,7 +94,9 @@ Deep-Learning-Drowsiness-Prediction_1/
 │   ├── detect_video.py         # Offline video → annotated MP4 + crops
 │   └── detect_live.py          # Webcam demo
 ├── data/                       # Datasets (gitignored); see Dataset section
-├── models/                     # *.keras weights (gitignored except .gitkeep)
+├── models/                     # local copy of weights for inference (gitignored *.keras)
+├── weights/                    # committed Keras checkpoints + README
+├── docs/                       # GitHub Pages (model zoo + metrics)
 ├── assets/                     # shape_predictor_68_face_landmarks.dat (gitignored)
 └── outputs/                    # videos/ + crops/ from scripts (gitignored)
 ```
@@ -172,6 +179,16 @@ Download **dlib’s** `shape_predictor_68_face_landmarks.dat` into **`assets/`**
 ### 3. Data
 
 Place **MRL** (and optional **Eye dataset**) under **`data/`** as described above.
+
+### 4. GitHub Pages (model zoo site)
+
+1. On GitHub: **Settings** → **Pages**.
+2. **Build and deployment** → Source: **Deploy from a branch**.
+3. Branch **main**, folder **/docs**, then **Save**.
+4. After the workflow finishes, open the URL shown (typically  
+   `https://snipofist.github.io/Deep_Learning-Drowsiness_Detection_Using_Infrared_Images/`).
+
+The static site in **`docs/`** lists each trained model, evaluation summary, and **download** links for the files in **`weights/`**.
 
 ---
 

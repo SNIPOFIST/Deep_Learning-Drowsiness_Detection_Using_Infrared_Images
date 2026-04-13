@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Model zoo — Drowsiness detection (infrared eyes)</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header>
+    <h1>Trained models &amp; evaluation</h1>
+    <p>
+      Binary CNNs on 64×64 grayscale MRL eye crops (awake vs. sleepy). Test set: <strong>16,981</strong> images
+      from <code>notebooks/02_baseline_cnn.ipynb</code>.
+    </p>
+  </header>
+
+  <main>
+    <p class="intro">
+      Metrics below come from the notebook run. Download Keras 3 compatible <code>.keras</code> weights from the
+      repository (links use GitHub <code>raw</code>).
+    </p>
+
+    <section class="grid" aria-label="Model cards">
+      <article class="card">
+        <span class="badge">Baseline</span>
+        <h2>baseline_cnn_mrl</h2>
+        <p style="margin:0 0 0.5rem; color: var(--muted); font-size:0.85rem;">
+          Conv blocks + dense head; no extra driver-specific augmentation beyond standard training pipeline.
+        </p>
+        <dl class="metrics">
+          <dt>Test accuracy</dt>
+          <dd><strong>98.59%</strong></dd>
+          <dt>Test loss</dt>
+          <dd>0.045</dd>
+          <dt>Macro F1</dt>
+          <dd>~0.99</dd>
+        </dl>
+        <a class="btn" href="https://github.com/SNIPOFIST/Deep_Learning-Drowsiness_Detection_Using_Infrared_Images/raw/main/weights/baseline_cnn_mrl.keras">Download baseline_cnn_mrl.keras</a>
+      </article>
+
+      <article class="card">
+        <span class="badge">Augmented</span>
+        <h2>cnn_mrl_driver_aug</h2>
+        <p style="margin:0 0 0.5rem; color: var(--muted); font-size:0.85rem;">
+          Training with flips / augmentation; tuned for driver-style use. Default for inference scripts.
+        </p>
+        <dl class="metrics">
+          <dt>Test accuracy</dt>
+          <dd><strong>98.15%</strong></dd>
+          <dt>Test loss</dt>
+          <dd>0.052</dd>
+          <dt>Macro F1</dt>
+          <dd>~0.98</dd>
+        </dl>
+        <a class="btn" href="https://github.com/SNIPOFIST/Deep_Learning-Drowsiness_Detection_Using_Infrared_Images/raw/main/weights/cnn_mrl_driver_aug.keras">Download cnn_mrl_driver_aug.keras</a>
+      </article>
+
+      <article class="card">
+        <span class="badge">Deep + aug</span>
+        <h2>cnn_mrl_driver_aug_deep</h2>
+        <p style="margin:0 0 0.5rem; color: var(--muted); font-size:0.85rem;">
+          Deeper CNN (extra conv block); early stopping during training.
+        </p>
+        <dl class="metrics">
+          <dt>Test accuracy</dt>
+          <dd><strong>98.39%</strong></dd>
+          <dt>Test loss</dt>
+          <dd>0.049</dd>
+          <dt>Macro F1</dt>
+          <dd>~0.98</dd>
+        </dl>
+        <a class="btn" href="https://github.com/SNIPOFIST/Deep_Learning-Drowsiness_Detection_Using_Infrared_Images/raw/main/weights/cnn_mrl_driver_aug_deep.keras">Download cnn_mrl_driver_aug_deep.keras</a>
+      </article>
+    </section>
+
+    <section class="compare">
+      <h2>Side-by-side</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Model</th>
+            <th>Test accuracy</th>
+            <th>Notes</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>baseline_cnn_mrl.keras</code></td>
+            <td>98.59%</td>
+            <td>Strongest accuracy on held-out test in this run</td>
+          </tr>
+          <tr>
+            <td><code>cnn_mrl_driver_aug.keras</code></td>
+            <td>98.15%</td>
+            <td>Used by <code>scripts/detect_video.py</code> / <code>detect_live.py</code> by default</td>
+          </tr>
+          <tr>
+            <td><code>cnn_mrl_driver_aug_deep.keras</code></td>
+            <td>98.39%</td>
+            <td>More capacity; between baseline and aug on test</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section class="compare" style="margin-top:2rem;">
+      <h2>Evaluation (from notebook)</h2>
+      <p style="color: var(--muted); font-size: 0.9rem;">
+        Full <strong>classification report</strong>, <strong>confusion matrices</strong>, and <strong>ROC / AUC</strong>
+        curves are in <code>notebooks/02_baseline_cnn.ipynb</code>. Re-run the notebook to regenerate plots.
+      </p>
+    </section>
+  </main>
+
+  <footer>
+    <p>
+      <a href="https://github.com/SNIPOFIST/Deep_Learning-Drowsiness_Detection_Using_Infrared_Images">Repository</a>
+      ·
+      <a href="https://github.com/SNIPOFIST/Deep_Learning-Drowsiness_Detection_Using_Infrared_Images#readme">README</a>
+    </p>
+  </footer>
+</body>
+</html>

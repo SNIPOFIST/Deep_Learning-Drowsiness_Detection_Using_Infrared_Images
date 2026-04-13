@@ -1,0 +1,176 @@
+:root {
+  --bg: #0f1419;
+  --card: #1a2332;
+  --muted: #8b9bb4;
+  --text: #e8eef7;
+  --accent: #3d9eff;
+  --accent-dim: #2a6cb0;
+  --ok: #3ecf8e;
+  --border: #2a3548;
+  font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.6;
+  min-height: 100vh;
+}
+
+a {
+  color: var(--accent);
+}
+
+a:hover {
+  color: #7ec4ff;
+}
+
+header {
+  padding: 2.5rem 1.5rem 2rem;
+  text-align: center;
+  border-bottom: 1px solid var(--border);
+  background: linear-gradient(180deg, #15202b 0%, var(--bg) 100%);
+}
+
+header h1 {
+  margin: 0 0 0.5rem;
+  font-size: 1.75rem;
+  font-weight: 600;
+}
+
+header p {
+  margin: 0;
+  color: var(--muted);
+  max-width: 42rem;
+  margin-inline: auto;
+}
+
+main {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 2rem 1.25rem 4rem;
+}
+
+.intro {
+  margin-bottom: 2.5rem;
+  color: var(--muted);
+  font-size: 0.95rem;
+}
+
+.grid {
+  display: grid;
+  gap: 1.25rem;
+}
+
+@media (min-width: 720px) {
+  .grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 1.25rem 1.35rem;
+  display: flex;
+  flex-direction: column;
+}
+
+.card h2 {
+  margin: 0 0 0.35rem;
+  font-size: 1.1rem;
+  color: var(--text);
+}
+
+.card .badge {
+  display: inline-block;
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--accent);
+  margin-bottom: 0.75rem;
+}
+
+.metrics {
+  margin: 0.75rem 0 1rem;
+  font-size: 0.88rem;
+}
+
+.metrics dt {
+  color: var(--muted);
+  float: left;
+  clear: left;
+  width: 6.5rem;
+}
+
+.metrics dd {
+  margin: 0 0 0.35rem 6.5rem;
+}
+
+.btn {
+  display: inline-block;
+  margin-top: auto;
+  padding: 0.55rem 1rem;
+  background: var(--accent-dim);
+  color: #fff !important;
+  text-decoration: none;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  text-align: center;
+  border: none;
+  cursor: pointer;
+}
+
+.btn:hover {
+  background: var(--accent);
+}
+
+.compare {
+  margin-top: 3rem;
+  overflow-x: auto;
+}
+
+.compare h2 {
+  font-size: 1.2rem;
+  margin-bottom: 1rem;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+}
+
+th,
+td {
+  padding: 0.65rem 0.75rem;
+  text-align: left;
+  border-bottom: 1px solid var(--border);
+}
+
+th {
+  color: var(--muted);
+  font-weight: 500;
+}
+
+tbody tr:hover {
+  background: rgba(255, 255, 255, 0.03);
+}
+
+footer {
+  text-align: center;
+  padding: 2rem 1rem;
+  color: var(--muted);
+  font-size: 0.85rem;
+  border-top: 1px solid var(--border);
+}
+
+footer a {
+  color: var(--muted);
+}
