@@ -97,5 +97,4 @@ The CNNs reach **strong metrics on the curated MRL test split**. Real deployment
 
 ## Author
 
-- **Portfolio / GitHub:** [github.com/SNIPOFIST](https://github.com/SNIPOFIST)
-- **LinkedIn:** [linkedin.com/in/your-profile](https://www.linkedin.com/in/your-profile) — *replace `your-profile` with your public LinkedIn slug*
+- **LinkedIn:** [linkedin.com/in/hariramselvaraj](https://www.linkedin.com/in/hariramselvaraj/)
