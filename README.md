@@ -1,24 +1,11 @@
-# Drowsiness Detection from Eye Images (Deep Learning)
+# Drowsiness detection from infrared eye images
 
-**Repository:** [github.com/SNIPOFIST/Deep_Learning-Drowsiness_Detection_Using_Infrared_Images](https://github.com/SNIPOFIST/Deep_Learning-Drowsiness_Detection_Using_Infrared_Images)
+## Open the model page & download weights
 
-**Model zoo (metrics + download links):** after enabling Pages (see **GitHub Pages** below), the site will be  
+**GitHub Pages (metrics + download each trained model):**  
 [https://snipofist.github.io/Deep_Learning-Drowsiness_Detection_Using_Infrared_Images/](https://snipofist.github.io/Deep_Learning-Drowsiness_Detection_Using_Infrared_Images/)
 
-**Saved weights:** Keras checkpoints live in [`weights/`](weights/) (copy into `models/` for local inference, or change `DEFAULT_MODEL_PATH` in `src/drowsiness/config.py`).
-
-**Per-frame binary classifier** that predicts **awake vs. sleepy** from **grayscale infrared eye crops**, trained on the **MRL Eye Dataset**, with optional **offline video** and **webcam** demos that combine **dlib** face landmarks with the trained **Keras** model.
-
----
-
-## The 2-minute recruiter brief
-
-| Question | Answer |
-|----------|--------|
-| **What did you build?** | An end-to-end pipeline: EDA and `tf.data` loading → CNN training → evaluation (accuracy, report, confusion matrix, ROC) → inference scripts for recorded video and live camera with temporal “sleepy” logic. |
-| **What data did you use?** | Primarily the **MRL Eye Dataset** (infrared, ~85k images in EDA notebook; test eval on **16,981** held-out images, 2 classes). A second Kaggle **Eye dataset** (RGB open/closed) is documented for extension. |
-| **How did you build it?** | **TensorFlow/Keras** CNN on **64×64×1** inputs, train/val/test folders, augmentation during training, **scikit-learn** for metrics, **OpenCV** + **dlib** for face/eye crops at inference. |
-| **What was the result?** | **~98.6% test accuracy** on the baseline CNN run (see **Evaluation** below). Training curves, confusion matrix, and ROC are produced in the modeling notebook. |
+Pre-trained Keras checkpoints are also in the repo under [`weights/`](weights/). Copy the file you need into `models/` for local inference, or change `DEFAULT_MODEL_PATH` in `src/drowsiness/config.py`.
 
 ---
 
@@ -30,192 +17,85 @@ Driver **drowsiness** is a major safety risk. This project focuses on a **proxy 
 
 ## Tech stack
 
-| Layer | Tools |
-|--------|--------|
-| **Deep learning** | TensorFlow / Keras (`tensorflow>=2.13`) |
-| **Data & EDA** | pandas, NumPy, Matplotlib |
-| **Classical ML metrics** | scikit-learn (report, confusion matrix, ROC/AUC) |
-| **Vision / I/O** | OpenCV, Pillow |
-| **Inference (face/eyes)** | dlib (face detection + 68-point landmarks), OpenCV |
-| **Environment** | Python 3.x, `requirements.txt` (see **Setup**) |
+| | |
+|--|--|
+| ![TensorFlow](https://img.shields.io/badge/TensorFlow-FF6F00?style=flat&logo=tensorflow&logoColor=white) | Deep learning & training (`tensorflow>=2.13`, Keras Functional API) |
+| ![Python](https://img.shields.io/badge/Python-3776AB?style=flat&logo=python&logoColor=white) | Python 3.x |
+| ![NumPy](https://img.shields.io/badge/NumPy-013243?style=flat&logo=numpy&logoColor=white) | Arrays & numerics |
+| ![Pandas](https://img.shields.io/badge/pandas-150458?style=flat&logo=pandas&logoColor=white) | Tables & EDA summaries |
+| ![Matplotlib](https://img.shields.io/badge/Matplotlib-11557c?style=flat) | Plots (distributions, training curves, ROC) |
+| ![scikit-learn](https://img.shields.io/badge/scikit--learn-F7931E?style=flat&logo=scikitlearn&logoColor=white) | Classification report, confusion matrix, ROC/AUC |
+| ![OpenCV](https://img.shields.io/badge/OpenCV-5C3EE8?style=flat&logo=opencv&logoColor=white) | Video / image I/O, resizing, drawing overlays |
+| ![Pillow](https://img.shields.io/badge/Pillow-3775A9?style=flat) | Image size inspection in EDA |
+| **dlib** | Face detection + 68-point landmarks for eye crops at inference |
 
 ---
 
-## Dataset & sources
+## Datasets
 
-Data are **not** committed to the repo (large files stay local). Download and arrange as follows.
+### MRL Eye Dataset (primary)
 
-### 1. MRL Eye Dataset (infrared) — primary training source
+| | |
+|--|--|
+| **Name** | MRL Eye Dataset (infrared) |
+| **Source** | [Kaggle — MRL Eye Dataset](https://www.kaggle.com/datasets/akashshingha850/mrl-eye-dataset) |
+| **Image type** | PNG, **grayscale infrared** eye crops; **binary labels** `awake` vs `sleepy` |
+| **Scale (from EDA notebook)** | **~84,898** PNGs indexed under `data/MRL/data`; **train 50,937** · **val 16,980** · **test 16,981** (roughly **50/50** awake vs sleepy per split) |
 
-- **Kaggle:** [MRL Eye Dataset](https://www.kaggle.com/datasets/akashshingha850/mrl-eye-dataset)
-- **Layout:**
+### Eye Dataset (optional / extension)
 
-```text
-data/
-  MRL/
-    data/
-      train/    # subfolders per class, e.g. awake / sleepy
-      val/
-      test/
-```
-
-### 2. Eye Dataset (open / closed eyes) — optional / secondary
-
-- **Kaggle:** [Eye Dataset](https://www.kaggle.com/datasets/prasadvpatil/eye-dataset)
-- **Layout:**
-
-```text
-data/
-  Eye dataset/
-    train_dataset/
-      openLeftEyes/
-      openRightEyes/
-      closedLeftEyes/
-      closedRightEyes/
-```
+| | |
+|--|--|
+| **Name** | Eye Dataset (open / closed eyes) |
+| **Source** | [Kaggle — Eye Dataset](https://www.kaggle.com/datasets/prasadvpatil/eye-dataset) |
+| **Image type** | RGB folders: open/closed left and right eyes (used as a secondary path in EDA; modeling notebook focuses on MRL) |
 
 ---
 
-## Project structure
+## Exploratory analysis (from `notebooks/01_data_gathering.ipynb`)
 
-```text
-Deep-Learning-Drowsiness-Prediction_1/
-├── README.md
-├── requirements.txt
-├── notebooks/
-│   ├── 01_data_gathering.ipynb   # EDA, class balance, tf.data pipeline
-│   └── 02_baseline_cnn.ipynb     # CNN train/eval, metrics, save weights
-├── src/
-│   └── drowsiness/
-│       ├── config.py             # Paths, thresholds, IMG_SIZE
-│       ├── preprocess.py         # Eye crop → model tensor
-│       └── eye_crop.py           # dlib face / eye regions
-├── scripts/
-│   ├── detect_video.py         # Offline video → annotated MP4 + crops
-│   └── detect_live.py          # Webcam demo
-├── data/                       # Datasets (gitignored); see Dataset section
-├── models/                     # local copy of weights for inference (gitignored *.keras)
-├── weights/                    # committed Keras checkpoints + README
-├── docs/                       # GitHub Pages (model zoo + metrics)
-├── assets/                     # shape_predictor_68_face_landmarks.dat (gitignored)
-└── outputs/                    # videos/ + crops/ from scripts (gitignored)
-```
+What the EDA code actually does:
+
+1. **Inventory** — Recursively collects all `*.png` under `data/MRL/data` and reports **total image count** (~85k in the logged run).
+2. **Stratification check** — For each split (`train` / `val` / `test`) and class (`awake` / `sleepy`), counts images and computes **class ratios** (~0.506 awake / ~0.494 sleepy per split in the saved outputs).
+3. **Resolution exploration** — Samples images with PIL, records **width × height**, aggregates **unique size frequencies**, and plots a **histogram of image widths** to see how consistent resolutions are before resizing.
+4. **Qualitative review** — Displays **sample images** per split/class (awake vs sleepy) for a quick visual sanity check.
+5. **TensorFlow pipeline prototype** — Builds `tf.keras.utils.image_dataset_from_directory` on train/val/test with **grayscale**, fixed **64×64** resize, **binary** labels, batching, and shows a **single batch shape** after preprocessing.
+6. **Augmentation + `tf.data`** — Defines **horizontal `RandomFlip`** and small **`RandomRotation`** (0.05), applies them only when training; normalizes to **[0, 1]**; uses **`shuffle(1000)`**, **`cache()`**, and **`prefetch(AUTOTUNE)`** for efficient input pipelines (mirrors the training notebook).
 
 ---
 
-## EDA summary
+## Modeling approach (`notebooks/02_baseline_cnn.ipynb`)
 
-*(From `notebooks/01_data_gathering.ipynb`.)*
-
-- **MRL infrared data:** on the order of **~85k** images total in the EDA run; paths collected under `data/MRL/data`.
-- **Splits:** counts and **class ratios** per **train / val / test** for labels such as **awake** vs. **sleepy** (see notebook tables).
-- **Pipeline:** `tf.keras.utils.image_dataset_from_directory`, grayscale, resize, normalization, light **data augmentation** (for modeling), `tf.data` prefetch/shuffle patterns.
-
----
-
-## Modeling approach
-
-*(From `notebooks/02_baseline_cnn.ipynb`.)*
-
-- **Task:** Binary image classification on **64×64 grayscale** eye patches (`input_shape` → `(64, 64, 1)`).
-- **Model:** Convolutional network (`baseline_cnn_mrl`): stacked **Conv2D / pooling** blocks, dense head, **sigmoid** for binary output.
-- **Training:** `model.fit` with **Adam**, **binary cross-entropy**, monitored **val** performance; **early stopping** available in notebook flow; training capped at **15 epochs** in the logged run (best val metrics in mid-to-late epochs).
-- **Artifacts:** Notebook saves under `models/` (e.g. `baseline_cnn_mrl.keras`, `cnn_mrl_driver_aug.keras`).
+- **Input:** 64×64×1 grayscale, **binary** labels, **batch size 64**.
+- **Augmentation (training):** `RandomFlip("horizontal")`, `RandomRotation(0.05)`; val/test without augmentation.
+- **Baseline CNN (`baseline_cnn_mrl`):** Three **Conv2D** blocks (32 → 64 → 128 filters, 3×3, ReLU, `padding="same"`) each followed by **MaxPooling2D(2×2)** → **Flatten** → **Dense(128, relu)** → **Dense(1, sigmoid)**.
+- **Training:** **Adam** (lr 1e-3), **binary cross-entropy**, metrics include **accuracy**; additional experiments in the same notebook train **augmented** and **deeper** variants and save `cnn_mrl_driver_aug.keras` and `cnn_mrl_driver_aug_deep.keras`.
 
 ---
 
 ## Evaluation metrics & results
 
-Reported on the **held-out test** split (**16,981** images, **2** classes) in the baseline notebook:
-
-| Metric | Approximate result (baseline run) |
-|--------|-----------------------------------|
-| **Test accuracy** | **~0.986** (98.6%) |
-| **Precision / recall / F1** | **~0.99** macro / weighted (see notebook `classification_report`) |
-| **Confusion matrix** | Printed in notebook |
-| **ROC / AUC** | ROC curve plotted; AUC in figure label (see notebook) |
-
-The notebook also discusses **hard examples** and **threshold** behavior (probability cutoffs for “sleepy”) for operational use.
-
-### Results / output screenshots
-
-- **Training curves** (loss & accuracy vs. epoch) and **ROC** plots are **inside** `notebooks/02_baseline_cnn.ipynb` as cell outputs.
-- For a portfolio README, export those figures and add them here, for example:
-
-```text
-docs/images/training_curves.png
-docs/images/confusion_matrix.png
-docs/images/roc_curve.png
-```
-
-*(Create a `docs/images/` folder, save exports from the notebook, and link them in this section with standard Markdown image syntax.)*
-
----
-
-## Sample output
-
-- **Training:** Keras progress logs show **val_accuracy** reaching roughly **~0.986** in later epochs (full logs in `notebooks/02_baseline_cnn.ipynb`).
-- **Offline video (`scripts/detect_video.py`):** loads `models/cnn_mrl_driver_aug.keras` (see `src/drowsiness/config.py`), reads `data/test_input/test_video.mp4`, writes **`outputs/videos/<timestamp>.mp4`** and eye crops under **`outputs/crops/<timestamp>/`**.
-- **Live demo (`scripts/detect_live.py`):** webcam overlay with **awake / sleepy** after sustained eye-closure (default **5 s** above probability threshold).
-
-**Note:** The baseline notebook may save **`models/baseline_cnn_mrl.keras`** first; inference defaults to **`models/cnn_mrl_driver_aug.keras`**. After training, **copy or rename** the weights, or set **`DEFAULT_MODEL_PATH`** in `src/drowsiness/config.py`.
-
----
-
-## Setup
-
-### 1. Python environment
-
-```bash
-python -m venv .venv
-source .venv/bin/activate   # Windows: .venv\Scripts\activate
-pip install -r requirements.txt
-```
-
-`requirements.txt` includes: TensorFlow, NumPy, pandas, Matplotlib, scikit-learn, OpenCV, Pillow, tqdm, **dlib** (may need build tools or a prebuilt wheel on your OS).
-
-Download **dlib’s** `shape_predictor_68_face_landmarks.dat` into **`assets/`** (see `src/drowsiness/config.py`).
-
-### 3. Data
-
-Place **MRL** (and optional **Eye dataset**) under **`data/`** as described above.
-
-### 4. GitHub Pages (model zoo site)
-
-1. On GitHub: **Settings** → **Pages**.
-2. **Build and deployment** → Source: **Deploy from a branch**.
-3. Branch **main**, folder **/docs**, then **Save**.
-4. After the workflow finishes, open the URL shown (typically  
-   `https://snipofist.github.io/Deep_Learning-Drowsiness_Detection_Using_Infrared_Images/`).
-
-The static site in **`docs/`** lists each trained model, evaluation summary, and **download** links for the files in **`weights/`**.
+On the **held-out test** set (**16,981** images, **2** classes), the baseline run reaches about **98.6% test accuracy** with **precision / recall / F1 ≈ 0.99** (macro/weighted). The notebook also reports **confusion matrices**, **ROC curves with AUC**, **misclassification examples**, and **threshold** sweeps for sleepy vs awake. See the **GitHub Pages** link at the top for a compact comparison of all three saved models and direct **downloads**.
 
 ---
 
 ## How to run
 
-From the **project root** (this folder), with `src` on the path for scripts (handled inside `scripts/`).
-
-1. **EDA:** Run `notebooks/01_data_gathering.ipynb` (kernel cwd can be project root or `notebooks/`; the notebook adjusts).
-2. **Train & evaluate:** Run `notebooks/02_baseline_cnn.ipynb`; weights go under `models/`.
-3. **Video inference:** Put a sample clip at `data/test_input/test_video.mp4`, ensure `models/cnn_mrl_driver_aug.keras` exists, then:
-
-   `python scripts/detect_video.py`
-
-4. **Live webcam:** `python scripts/detect_live.py` (camera permissions).
-
-If you use a **disposable VM**, recreate the venv and reinstall dependencies before re-running.
+1. **EDA:** `notebooks/01_data_gathering.ipynb`
+2. **Train / evaluate:** `notebooks/02_baseline_cnn.ipynb`
+3. **Video:** place weights in `models/`, add `data/test_input/test_video.mp4`, then `python scripts/detect_video.py`
+4. **Webcam:** `python scripts/detect_live.py`
 
 ---
 
 ## Conclusion & recommendations
 
-- The **baseline CNN** achieves **strong test-set metrics** on **curated MRL splits**, which is a solid proof of concept for **eye-state** classification.
-- **Deployment caveats:** Real vehicles need checks on **lighting, pose, glasses, IR vs. RGB**, and **temporal smoothing** different from a static test set; consider **calibration** on your own video and **error analysis** on false positives (alert fatigue).
-- **Next steps:** Try **temporal models** (e.g. CNN + RNN/Transformer on frame sequences), **multi-dataset** training with the second Kaggle set, and **on-device** latency tests.
+The CNNs reach **strong metrics on the curated MRL test split**. Real deployment still needs checks on **lighting, pose, glasses, and domain shift**; consider **calibrating thresholds** on your own video and exploring **temporal** models for smoother alerts.
 
 ---
 
-## Takeaway
+## Author
 
-This repository shows a **complete ML story**: public data → **EDA** → **CNN** training → **rigorous evaluation** (accuracy, report, confusion matrix, ROC) → **practical inference** (video + webcam) with explicit **engineering notes** (paths, dlib binary, model filename alignment). Keep **figures** in the README updated from the notebook exports so reviewers never need to execute code to see the headline results.
+- **Portfolio / GitHub:** [github.com/SNIPOFIST](https://github.com/SNIPOFIST)
+- **LinkedIn:** [linkedin.com/in/your-profile](https://www.linkedin.com/in/your-profile) — *replace `your-profile` with your public LinkedIn slug*
