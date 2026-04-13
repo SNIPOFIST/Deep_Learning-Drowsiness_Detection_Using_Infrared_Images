@@ -1,5 +1,7 @@
 # Drowsiness Detection from Eye Images (Deep Learning)
 
+**Repository:** [github.com/SNIPOFIST/Deep_Learning-Drowsiness_Detection_Using_Infrared_Images](https://github.com/SNIPOFIST/Deep_Learning-Drowsiness_Detection_Using_Infrared_Images)
+
 **Per-frame binary classifier** that predicts **awake vs. sleepy** from **grayscale infrared eye crops**, trained on the **MRL Eye Dataset**, with optional **offline video** and **webcam** demos that combine **dlib** face landmarks with the trained **Keras** model.
 
 ---
